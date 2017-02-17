@@ -36,4 +36,3 @@ migrate(moduleName, from, to, options)
 - The dates of every version published will be reset to the date and time you run this script
 - The migrating user will be added as maintainer
 - Scoped packages: TODO
-- handle prepublish scripts: TODO
