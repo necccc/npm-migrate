@@ -10,11 +10,10 @@ const updatePackageJson = function (folder, newRegistry) {
         let packageJsonObject = require(packjson)
         packageJsonObject.publishConfig = { registry: newRegistry }
 
-            fs.writeFile(packjson, JSON.stringify(packageJsonObject), (err) => {
-                if (err) return reject(err);
-                resolve(folder)
-            })
-
+        fs.writeFile(packjson, JSON.stringify(packageJsonObject), (err) => {
+            if (err) return reject(err);
+            resolve(folder)
+        })
     })
 }
 

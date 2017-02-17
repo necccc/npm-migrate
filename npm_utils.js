@@ -9,8 +9,10 @@ const publishAsync = function (registry, path, callback) {
         registry: registry
     }, () => {
 
-        npm.commands.publish([path], (err, data) =>
-        {
+        let tgz = path + '.tgz'
+
+        npm.commands.publish([tgz], (err, data) => {
+
             if (err) return callback(err);
 
             callback(null, path)
@@ -80,4 +82,14 @@ module.exports.publishSeries = function (registry, packageFolders) {
     })
 }
 
+const packageFromPath = function (path) {
+    return path
+            .replace(process.cwd() + '/npm-migrate_tmp/', '')
+            .replace('/package', '')
+}
 
+module.exports.packageFromPaths = function (paths) {
+    return paths.map(packageFromPath)
+}
+
+module.exports.packageFromPath = packageFromPath;

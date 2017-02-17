@@ -2,9 +2,9 @@ const mute = require('mute')
 const npm = require('npm')
 const curry = require('lodash.curry')
 
-const untgz = require('./untgz')
+const { unpack, pack } = require('./tgz')
 const cleanup = require('./cleanup')
-const { getVersionList, getTarball, publishSeries} = require('./npm_utils')
+const { getVersionList, getTarball, publishSeries } = require('./npm_utils')
 const updatePackage = require('./update')
 
 module.exports = function (moduleName, oldRegistry, newRegistry, options = { debug: false }) {
@@ -24,8 +24,9 @@ module.exports = function (moduleName, oldRegistry, newRegistry, options = { deb
 
     return getVersionList(moduleName, oldRegistry)
         .then(versions => Promise.all(versions.map(curried_getTarball)))
-        .then(tarballs => Promise.all(tarballs.map(untgz)))
+        .then(tarballs => Promise.all(tarballs.map(unpack)))
         .then(packageFolders => Promise.all(packageFolders.map(curried_updatePackage)))
+        .then(packageFolders => Promise.all(packageFolders.map(pack)))
         .then(curried_publishSeries)
         .then(cleanup)
         .then((results) => {
