@@ -20,6 +20,33 @@ const publishAsync = function (registry, path, callback) {
     })
 }
 
+const getTarball = function (moduleName, registry, version, callback) {
+
+    const versionedModule = [moduleName, version].join('@')
+
+    npm.load({
+        registry: registry
+    }, () => {
+
+        npm.commands.pack([versionedModule], (err, data) => {
+
+            if (err) return callback(err);
+
+            let tarball = versionedModule.replace('@','-') + '.tgz'
+            let tarballFrom = process.cwd() + '/' + tarball
+            let tarballTo = process.cwd() + '/npm-migrate_tmp/' + tarball
+
+            mv(tarballFrom, tarballTo, { mkdirp: true }, (err) => {
+
+                if (err) return callback(err);
+
+                callback(null, tarballTo)
+            })
+        })
+    })
+
+}
+
 module.exports.getVersionList = function (moduleName, registry) {
 
     return new Promise((resolve, reject) => {
@@ -39,33 +66,24 @@ module.exports.getVersionList = function (moduleName, registry) {
     })
 }
 
-module.exports.getTarball = function (moduleName, registry, version) {
 
-    const versionedModule = [moduleName, version].join('@')
+module.exports.getTarballs = function (moduleName, registry, versions) {
+
+    let curried_getTarball = curry(getTarball)
+    let series = versions.map((version) => curried_getTarball(moduleName, registry, version))
 
     return new Promise((resolve, reject) => {
-
-        npm.load({
-            registry: registry
-        }, () => {
-
-            npm.commands.pack([versionedModule], (err, data) => {
-
+        async.series(
+            series,
+            (err, results) => {
                 if (err) return reject(err);
-
-                let tarball = versionedModule.replace('@','-') + '.tgz'
-                let tarballFrom = process.cwd() + '/' + tarball
-                let tarballTo = process.cwd() + '/npm-migrate_tmp/' + tarball
-
-                mv(tarballFrom, tarballTo, { mkdirp: true }, (err) => {
-
-                    if (err) return reject(err);
-                    resolve(tarballTo)
-                })
+                resolve(results)
             })
-        })
     })
 }
+
+
+
 
 module.exports.publishSeries = function (registry, packageFolders) {
 

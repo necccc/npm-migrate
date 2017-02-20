@@ -4,7 +4,7 @@ const curry = require('lodash.curry')
 
 const { unpack, pack } = require('./tgz')
 const cleanup = require('./cleanup')
-const { getVersionList, getTarball, publishSeries } = require('./npm_utils')
+const { getVersionList, getTarballs, publishSeries } = require('./npm_utils')
 const updatePackage = require('./update')
 
 module.exports = function (moduleName, oldRegistry, newRegistry, options = { debug: false }) {
@@ -14,24 +14,23 @@ module.exports = function (moduleName, oldRegistry, newRegistry, options = { deb
     }
 
     let curried_updatePackage = curry(updatePackage)
-    curried_updatePackage = curried_updatePackage(oldRegistry, newRegistry)
+    curried_updatePackage = curried_updatePackage(newRegistry)
 
-    let curried_getTarball = curry(getTarball)
-    curried_getTarball = curried_getTarball(moduleName, oldRegistry)
+    let curried_getTarballs = curry(getTarballs)
+    curried_getTarballs = curried_getTarballs(moduleName, oldRegistry)
 
     let curried_publishSeries = curry(publishSeries)
     curried_publishSeries = curried_publishSeries(newRegistry)
 
     return getVersionList(moduleName, oldRegistry)
-        .then(versions => Promise.all(versions.map(curried_getTarball)))
-        .then(tarballs => Promise.all(tarballs.map(unpack)))
-        .then(packageFolders => Promise.all(packageFolders.map(curried_updatePackage)))
-        .then(packageFolders => Promise.all(packageFolders.map(pack)))
+        .then(curried_getTarballs)
+        .then(unpack)
+        .then(curried_updatePackage)
+        .then(pack)
         .then(curried_publishSeries)
         .then(cleanup)
         .then((results) => {
             if (unmute) unmute();
-
             return results
         })
         .catch((err) => {
