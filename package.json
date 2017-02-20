@@ -1,6 +1,6 @@
 {
   "name": "npm-migrate",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Migrate all versions of a selected package from a registry to another one",
   "main": "npm-migrate.js",
   "scripts": {
