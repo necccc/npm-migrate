@@ -6,6 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/necccc/npm-migrate.git"
+  },
   "keywords": [
     "npm",
     "migration",
@@ -13,6 +17,10 @@
   ],
   "author": "nec@shell8.net",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/necccc/npm-migrate/issues"
+  },
+  "homepage": "https://github.com/necccc/npm-migrate#readme",
   "dependencies": {
     "async": "2.1.4",
     "compressing": "1.1.0",
