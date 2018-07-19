@@ -26,7 +26,7 @@ migrate(moduleName, from, to, options)
 
 ## What it does
 
-1. Fetches all versions as tarballs from old registry
+1. Fetches all versions (or just those not already migrated) as tarballs from old registry
 2. Extracts & updates `package.json`: the `publishConfig.registry` field to the new registry url
 3. Publishes each version to the new registry
 4. Cleans up after itself
@@ -35,3 +35,8 @@ migrate(moduleName, from, to, options)
 
 - The dates of every version published will be reset to the date and time you run this script
 - The migrating user will be added as maintainer
+
+## Changelog
+
+- v1.2.0 - Work with scoped packages
+- v1.3.0 - Compare both registries and migrate only the remaining versions not in the new registry
