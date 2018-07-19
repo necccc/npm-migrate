@@ -4,9 +4,9 @@ Migrate all versions of a selected package from a registry to another one.
 
 ## Usage
 
-```
+```js
 
-const migrate = require('./npm-migrate')
+const migrate = require('npm-migrate')
 
 const moduleName = 'my-private-module'
 const from = 'http://your-old.private-registry.com:8080'
@@ -35,4 +35,3 @@ migrate(moduleName, from, to, options)
 
 - The dates of every version published will be reset to the date and time you run this script
 - The migrating user will be added as maintainer
-- Scoped packages: TODO

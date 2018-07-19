@@ -1,6 +1,6 @@
 {
   "name": "npm-migrate",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Migrate all versions of a selected package from a registry to another one",
   "main": "npm-migrate.js",
   "scripts": {
@@ -14,13 +14,13 @@
   "author": "nec@shell8.net",
   "license": "MIT",
   "dependencies": {
-    "async": "^2.1.4",
-    "compressing": "^1.1.0",
-    "graceful-fs": "^4.1.11",
-    "lodash.curry": "^4.1.1",
-    "mute": "^2.0.6",
-    "mv": "^2.1.1",
-    "npm": "^4.2.0",
-    "rimraf": "^2.5.4"
+    "async": "2.1.4",
+    "compressing": "1.1.0",
+    "graceful-fs": "4.1.11",
+    "lodash.curry": "4.1.1",
+    "mute": "2.0.6",
+    "mv": "2.1.1",
+    "npm": "4.2.0",
+    "rimraf": "2.5.4"
   }
 }

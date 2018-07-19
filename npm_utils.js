@@ -32,9 +32,13 @@ const getTarball = function (moduleName, registry, version, callback) {
 
             if (err) return callback(err);
 
-            let tarball = versionedModule.replace('@','-') + '.tgz'
-            let tarballFrom = process.cwd() + '/' + tarball
-            let tarballTo = process.cwd() + '/npm-migrate_tmp/' + tarball
+            const tarballEscaped = versionedModule
+              .replace(/^@/, '') // remove first @
+              .replace('@','-') // change @0.0.0 to -0.0.0
+              .replace('/', '-'); // change scope/ to scope-
+            const tarball = `${tarballEscaped}.tgz`;
+            const tarballFrom = process.cwd() + '/' + tarball
+            const tarballTo = process.cwd() + '/npm-migrate_tmp/' + tarball
 
             mv(tarballFrom, tarballTo, { mkdirp: true }, (err) => {
 
