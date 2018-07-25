@@ -51,20 +51,57 @@ const getTarball = function (moduleName, registry, version, callback) {
 
 }
 
-module.exports.getVersionList = function (moduleName, registry) {
+function getRemainingVersions (moduleName, oldRegistry, newRegistry, oldRegistryVersions) {
+
+    return new Promise((resolve) => {
+
+        npm.config.set('registry', newRegistry);
+        npm.commands.info([moduleName], (err, data) => {
+
+            if (err) {
+                return resolve(oldRegistryVersions);
+            }
+        
+            const latest = Object.keys(data)[0];
+            const newRegistryVersions = data[latest].versions;
+            console.log('New Registry Versions', newRegistryVersions);
+
+            remainingVersions = oldRegistryVersions.filter((v) => !newRegistryVersions.includes(v));
+            if (!remainingVersions.length) {
+                console.log('No more versions of this package to migrate');
+            } else {
+                console.log('Remaining Versions to Migrate', remainingVersions);
+            }
+
+            resolve(remainingVersions);
+
+        });
+        npm.config.set('registry', oldRegistry);
+
+  });
+
+}
+
+module.exports.getVersionList = function (moduleName, oldRegistry, newRegistry) {
 
     return new Promise((resolve, reject) => {
 
         npm.load({
-            registry: registry
+            registry: oldRegistry
         }, () => {
 
             npm.commands.info([moduleName], function (err, data) {
 
                 if (err) return reject(err);
 
-                let latest = Object.keys(data)[0];
-                resolve(data[latest].versions)
+                const latest = Object.keys(data)[0];
+                const oldRegistryVersions = data[latest].versions;
+                console.log('Old Registry Versions', oldRegistryVersions);
+
+                return getRemainingVersions(moduleName, oldRegistry, newRegistry, oldRegistryVersions)
+                    .then((remainingVersions) => {
+                        resolve(remainingVersions);
+                    });
             })
         })
     })
