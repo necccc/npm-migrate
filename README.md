@@ -36,6 +36,10 @@ migrate(moduleName, from, to, options)
 - The dates of every version published will be reset to the date and time you run this script
 - The migrating user will be added as maintainer
 
+## Troubleshooting
+* `failed to query new registry for existing versions`:  
+  Ensure you have access to new repository and have `always-auth=true` set either in your global .npmrc or a local one.
+
 ## Changelog
 
 - v1.2.0 - Work with scoped packages

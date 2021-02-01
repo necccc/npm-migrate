@@ -59,6 +59,7 @@ function getRemainingVersions (moduleName, oldRegistry, newRegistry, oldRegistry
         npm.commands.info([moduleName], (err, data) => {
 
             if (err) {
+                console.warn('failed to query new registry for existing versions, migrating all', err);
                 return resolve(oldRegistryVersions);
             }
         
