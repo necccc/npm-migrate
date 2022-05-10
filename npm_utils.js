@@ -58,23 +58,23 @@ function getRemainingVersions (moduleName, oldRegistry, newRegistry, oldRegistry
         npm.config.set('registry', newRegistry);
         npm.commands.info([moduleName], (err, data) => {
 
-            if (err) {
+            if (err || !Object.keys(data).length) {
                 return resolve(oldRegistryVersions);
             }
-        
+            
             const latest = Object.keys(data)[0];
             const newRegistryVersions = data[latest].versions;
             console.log('New Registry Versions', newRegistryVersions);
 
-            remainingVersions = oldRegistryVersions.filter((v) => !newRegistryVersions.includes(v));
+            const remainingVersions = oldRegistryVersions.filter((v) => !newRegistryVersions.includes(v));
+
             if (!remainingVersions.length) {
                 console.log('No more versions of this package to migrate');
             } else {
                 console.log('Remaining Versions to Migrate', remainingVersions);
             }
-
-            resolve(remainingVersions);
-
+                
+            resolve(remainingVersions);       
         });
         npm.config.set('registry', oldRegistry);
 
